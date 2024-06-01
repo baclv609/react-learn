@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function AdminPage({ data, deleteItem }) {
   // console.log("setDataAdmin", setDataAdmin);
 
-  // const deleteItem = (id, data) => {
+  // const deleteItem = (id) => {
   //   console.log("id", id);
   // };
   return (

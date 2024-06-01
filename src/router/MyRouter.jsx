@@ -78,11 +78,7 @@ export default function MyRouter() {
           const res = await api.post("/products", data); // gửi dữ liệu lên server
           setProduct([...products, res.data]); // cập nhật lại sp
         }
-        if (
-          confirm(
-            "Thành công! Bạn có muốn tiếp tục thêm sản phẩm không?"
-          )
-        ) {
+        if (confirm("Thành công! Bạn có muốn tiếp tục thêm sản phẩm không?")) {
           navigate("/admin");
         }
       } catch (error) {
@@ -93,13 +89,15 @@ export default function MyRouter() {
 
   const hendaleDelete = (id) => {
     console.log("id", id);
-    // (async () => {
-    //   try {
-    //     await api.delete(`/products/${id}`);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // })();
+    (async () => {
+      try {
+        await api.delete(`/products/${id}`);
+        const newData = products.filter((p) => p.id != id && p); 
+        setProduct(newData);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
   };
 
   return (
