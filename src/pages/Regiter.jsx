@@ -1,26 +1,28 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import authSchema from "../schemaValid/authSchema";
+import api from "../api";
 
-const productSchema = z.object({
-  title: z.string().min(5), // kiểm tra dữ liệu nhập vào phải là string và không được để trống
-  price: z.number().min(0), // kiểm tra dữ liệu nhập vào phải là number và không được để trống
-  description: z.string().optional(), // kiểm tra dữ liệu nhập vào phải là string
-}); 
-export default function Regiter({ onAdd }) {
+export default function Regiter() {
   const {
-    register, // sử dụng hook form để lấy dữ liệu từ form
-    handleSubmit, // sử dụng hook form để xử lý form
-    formState: { errors }, // sử dụng hook form để lấy ra lỗi khi nhập dữ liệu
+    register,
+    handleSubmit,
+    formState: { errors },
   } = useForm({
-    resolver: zodResolver(productSchema), // sử dụng zod để kiểm tra dữ liệu đầu vào form 
-    // nếu dữ liệu không đúng theo schema thì sẽ hiển thị lỗi
+    resolver: zodResolver(authSchema),
   });
 
   const onSubmit = (data) => {
     console.log(data);
-    onAdd(data); // truyền dữ liệu ra ngoài
+    (async () => {
+      try {
+        const res = await api.post(`/register`, data);
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
   };
   return (
     <div>
@@ -31,48 +33,34 @@ export default function Regiter({ onAdd }) {
             htmlFor="large-input"
             className="block mb-2 text-sm font-medium text-gray-900"
           >
-            Title
+            email
           </label>
           <input
             type="text"
-            id="title"
+            id="email"
             className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-base focus:ring-blue-500 focus:border-blue-500"
-            {...register("title", { require: true })}
+            {...register("email", { require: true })}
           />
-          {errors.title?.message && (
-            <p className="text-[red]">{errors.title?.message}</p>
+          {errors.email?.message && (
+            <p className="text-[red]">{errors.email?.message}</p>
           )}
         </div>
         <div className="mb-5">
           <label
-            htmlFor="price"
+            htmlFor="password"
             className="block mb-2 text-sm font-medium text-gray-900"
           >
-            Price
+            password
           </label>
           <input
-            type="number"
-            id="price"
+            type="password"
+            id="password"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-            {...register("price", { require: true, valueAsNumber: true })} // valueAsNumber: true để chuyển dữ liệu nhập vào thành number
+            {...register("password", { require: true })}
           />
-          {errors.price?.message && (
-            <p className="text-[red]">{errors.price?.message}</p>
+          {errors.password?.message && (
+            <p className="text-[red]">{errors.password?.message}</p>
           )}
-        </div>
-        <div>
-          <label
-            htmlFor="description"
-            className="block mb-2 text-sm font-medium text-gray-900"
-          >
-            description
-          </label>
-          <input
-            type="text"
-            id="description"
-            className="block w-full p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 text-xs focus:ring-blue-500 focus:border-blue-500"
-            {...register("description")}
-          />
         </div>
 
         <div className="mt-5 w-full">
@@ -80,7 +68,7 @@ export default function Regiter({ onAdd }) {
             type="submit"
             className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
           >
-            Add product
+            Regiter
           </button>
         </div>
       </form>
