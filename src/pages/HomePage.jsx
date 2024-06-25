@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import ProductList from "../components/ProductList";
 import Slider from "../components/Slider";
-export default function HomePage({ data }) {
+import { ProductContext } from "../contexts/ProductContext";
+
+export default function HomePage() {
+  const { state } = useContext(ProductContext);
   return (
     <div>
       <div className="max-w-screen-xl mx-auto">
@@ -20,7 +23,7 @@ export default function HomePage({ data }) {
               </a>
             </div>
           </nav>
-          {data.slice(0, 8).map((product) => (
+          {state.products.slice(0, 8).map((product) => (
             <ProductList key={product.id} data={product} />
           ))}
         </div>

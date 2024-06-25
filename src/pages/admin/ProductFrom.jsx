@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import productSchema from "../../schemaValid/productSchema";
 import api from "../../api";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import ProductReducer from "../../reducers/productReducer";
 
-export default function ProductFrom({ onProduct }) {
+export default function ProductFrom() {
+  const navigate = useNavigate();
+  const { dispatch } = useReducer(ProductReducer);
   const { id } = useParams();
   const {
     register,
@@ -28,10 +31,28 @@ export default function ProductFrom({ onProduct }) {
       })();
     }, []);
   }
-
   const onSubmit = (data) => {
-    onProduct({ ...data, id }); // truyền dữ liệu và id ra ngoài
+    (async () => {
+      try {
+        if (id) {
+          await api.patch(`/products/${id}`, data);
+          dispatch({ type: "UPDATE_PRODUCT", payload: { id, ...data } });
+          navigate("/admin");
+        } else {
+          const { data } = await api.post("/products", data);
+          dispatch({ type: "ADD_PRODUCT", payload: data });
+          if (
+            confirm("Thành công! Bạn có muốn tiếp tục thêm sản phẩm không?")
+          ) {
+            navigate("/admin");
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
   };
+
   return (
     <div>
       <h1>{id ? "Product Edit" : "Product Add"}</h1>
@@ -90,7 +111,7 @@ export default function ProductFrom({ onProduct }) {
             type="submit"
             className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
           >
-           {id ? "Product Edit" : "Product Add"}
+            {id ? "Product Edit" : "Product Add"}
           </button>
         </div>
       </form>

@@ -1,15 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { set } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { ProductContext } from "../../contexts/ProductContext";
+import api from "../../api";
 
-export default function AdminPage({ data, deleteItem }) {
+export default function AdminPage() {
+  const { state, dispatch } = useContext(ProductContext);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const deleteItem = async (id) => {
+    try {
+      if (confirm("Do you want to delete this product?")) {
+        await api.delete(`/products/${id}`);
+        dispatch({ type: "DELETE_PRODUCT", payload: id });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // const [product, setProduct] = useState(data);
+  // const [sortDirection, setSortDirection] = useState(1);
+
+  // useEffect(() => {
+  //   if (data) {
+  //     setProduct(data);
+  //   }
+  // }, [data]);
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+    setProduct(filteredData);
   };
-  const filteredData = data.filter((p) =>
-    p.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
+  // const filteredData = state.products.filter((p) =>
+  //   p.title.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+
+  // const handleSortByPrice = () => {
+  //   if (sortDirection === 1) {
+  //     const sorted = [...filteredData].sort((a, b) => a.price - b.price);
+  //     setProduct(sorted);
+  //     setSortDirection(-1);
+  //   } else {
+  //     const sorted = [...filteredData].sort((a, b) => b.price - a.price);
+  //     setProduct(sorted);
+  //     setSortDirection(1);
+  //   }
+  // };
   return (
     <div className="flex flex-col">
       <div className="m-1.5 overflow-x-auto">
@@ -22,14 +59,40 @@ export default function AdminPage({ data, deleteItem }) {
             Add new product
           </Link>
           <div>
-            <input
+            {/* <input
               type="text"
               placeholder="Search by title..."
               value={searchTerm}
               onChange={handleSearchChange}
-              class="block  mt-2 w-[300px] placeholder-gray-400/70 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
-            />
+              className="block  mt-2 w-[300px] placeholder-gray-400/70 rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-gray-700 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40"
+            /> */}
           </div>
+        </div>
+
+        {/* btn sort by price */}
+        <div className="mt-4">
+          <button
+            // onClick={handleSortByPrice}
+            className="flex items-center px-4 py-2 font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+          >
+            <svg
+              className="w-5 h-5 mx-1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span className="mx-1">
+              {/* {sortDirection === 1
+                ? "Sort by Price Ascending"
+                : "Sort by Price Descending"} */}
+            </span>
+          </button>
         </div>
 
         <div className="p-1.5 min-w-full inline-block align-middle">
@@ -70,7 +133,7 @@ export default function AdminPage({ data, deleteItem }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {filteredData.map((item) => (
+                {state.products.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-100">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                       {item.title}

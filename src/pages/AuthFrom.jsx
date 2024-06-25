@@ -36,7 +36,9 @@ export default function AuthFrom({ isRegiter }) {
   };
   return (
     <div>
-      <h1>{isRegiter ? "Regiter" : "login"}</h1>
+      <h1 className="text-center text-[36px]">
+        {isRegiter ? "Regiter" : "Login"}
+      </h1>
       <form className="max-w-sm mx-auto my-4" onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-5">
           <label
