@@ -1,13 +1,9 @@
 import { Routes, Route } from "react-router";
-import HomePage from "../pages/HomePage";
-import AboutPage from "../pages/AboutPage";
-import NoPage from "../pages/NoPage";
 import { Link } from "react-router-dom";
 
 function Header() {
   const ListLinknav = [
     { to: "/", title: "Home" },
-    { to: "/about", title: "About" },
     { to: "/shop", title: "Shop" },
     { to: "/login", title: "Login" },
     { to: "/regiter", title: "Regiter" },
@@ -20,52 +16,13 @@ function Header() {
     <nav className="relative bg-white shadow ">
       <div className="container px-6 py-3 mx-auto md:flex">
         <div className="flex items-center justify-between">
-          <a href="#">
+          <Link to="/">
             <img
               className="w-auto h-6 sm:h-7"
               src="https://merakiui.com/images/full-logo.svg"
               alt="Description of the image"
             />
-          </a>
-          {/* Mobile menu button */}
-          <div className="flex lg:hidden">
-            <button
-              type="button"
-              className="text-gray-500  hover:text-gray-600 focus:outline-none focus:text-gray-600"
-              aria-label="toggle menu"
-            >
-              <svg
-                x-show="!isOpen"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 8h16M4 16h16"
-                />
-              </svg>
-              <svg
-                x-show="isOpen"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          </div>
+          </Link>
         </div>
         {/* Mobile Menu open: "block", Menu closed: "hidden" */}
         <div className="absolute inset-x-0 z-20 w-full px-6 py-4 transition-all duration-300 ease-in-out bg-white  md:mt-0 md:p-0 md:top-0 md:relative md:opacity-100 md:translate-x-0 md:flex md:items-center md:justify-between">

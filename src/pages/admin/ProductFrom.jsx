@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import productSchema from "../../schemaValid/productSchema";
@@ -6,10 +6,17 @@ import api from "../../api";
 import { useNavigate, useParams } from "react-router";
 import ProductReducer from "../../reducers/productReducer";
 
+const { VITE_CLOUD_NAME, VITE_UPLOAD_PRESET } = import.meta.env;
+
 export default function ProductFrom() {
   const navigate = useNavigate();
   const { dispatch } = useReducer(ProductReducer);
   const { id } = useParams();
+  const [thumbnailUrl, setThumbnailUrl] = useState(null);
+
+  // State để lưu trữ lựa chọn của người dùng
+  const [thumbnailOption, setThumbnailOption] = useState("keep");
+
   const {
     register,
     handleSubmit,
@@ -24,23 +31,64 @@ export default function ProductFrom() {
       (async () => {
         try {
           const { data } = await api.get(`/products/${id}`);
+          console.log(data);
           reset(data);
+          setThumbnailUrl(data.thumbnail);
         } catch (error) {
           console.log(error);
         }
       })();
-    }, []);
+    }, [id, reset]);
   }
-  const onSubmit = (data) => {
+
+  const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", VITE_UPLOAD_PRESET);
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${VITE_CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await response.json();
+    console.log(data);
+    return data.secure_url;
+  };
+  const onSubmit = (product) => {
     (async () => {
       try {
+        console.log("product", product);
+        let updatedProduct = { ...product };
+        // Kiểm tra lựa chọn của admin và xử lý tương ứng
+        switch (thumbnailOption) {
+          case "upload":
+            // Xử lý upload ảnh nếu admin chọn upload từ local
+            if (product.thumbnail && product.thumbnail[0]) {
+              const thumbnailUrl = await uploadImage(product.thumbnail[0]);
+              console.log("Uploaded thumbnail URL:", thumbnailUrl);
+              updatedProduct = { ...updatedProduct, thumbnail: thumbnailUrl };
+            }
+            break;
+          default:
+          // Giữ nguyên ảnh cũ khi không thay đổi
+          // Hoặc mặc định khi người dùng chọn "link ảnh online"
+          // Tôi sử dụng switch case để dễ mở rộng cho các tình huống trong tương lai
+        }
+
         if (id) {
-          await api.patch(`/products/${id}`, data);
-          dispatch({ type: "UPDATE_PRODUCT", payload: { id, ...data } });
+          await api.patch(`/products/${id}`, updatedProduct);
+          dispatch({
+            type: "UPDATE_PRODUCT",
+            payload: { id, product: updatedProduct },
+          });
           navigate("/admin");
         } else {
-          const { data } = await api.post("/products", data);
-          dispatch({ type: "ADD_PRODUCT", payload: data });
+          const res = await api.post("/products", updatedProduct);
+          dispatch({ type: "ADD_PRODUCT", payload: res.data });
+          console.log(res.data);
           if (
             confirm("Thành công! Bạn có muốn tiếp tục thêm sản phẩm không?")
           ) {
@@ -96,7 +144,7 @@ export default function ProductFrom() {
             htmlFor="description"
             className="block mb-2 text-sm font-medium text-gray-900"
           >
-            description
+            Description
           </label>
           <input
             type="text"
@@ -106,12 +154,60 @@ export default function ProductFrom() {
           />
         </div>
 
+        <div className="mb-3">
+          <label htmlFor="thumbnailOption" className="form-label">
+            Choose Thumbnail Option
+          </label>
+          <select
+            className="form-control"
+            id="thumbnailOption"
+            value={thumbnailOption}
+            onChange={(e) => setThumbnailOption(e.target.value)}
+          >
+            <option value="keep">Keep Current Thumbnail</option>
+            <option value="link">Add Thumbnail from Link</option>
+            <option value="upload">Upload Thumbnail from Local</option>
+          </select>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="thumbnail" className="form-label">
+            Thumbnail
+          </label>
+          {thumbnailOption === "link" && (
+            <input
+              type="text"
+              className="form-control"
+              id="thumbnail"
+              {...register("thumbnail")}
+            />
+          )}
+          {thumbnailOption === "upload" && (
+            <input
+              type="file"
+              className="form-control"
+              id="thumbnail"
+              {...register("thumbnail", { required: true })}
+            />
+          )}
+          {errors.thumbnail?.message && (
+            <p className="text-danger">{errors.thumbnail?.message}</p>
+          )}
+          {thumbnailUrl && (
+            <img
+              src={thumbnailUrl}
+              alt="Product Thumbnail"
+              style={{ maxWidth: "200px", marginTop: "10px" }}
+            />
+          )}
+        </div>
+
         <div className="mt-5 w-full">
           <button
             type="submit"
             className="text-white w-full bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
           >
-            {id ? "Product Edit" : "Product Add"}
+            {id ? "Update" : "Add"}
           </button>
         </div>
       </form>

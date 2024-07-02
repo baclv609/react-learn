@@ -1,23 +1,6 @@
 {
   "products": [
     {
-      "id": "21",
-      "title": "- Daal Masoor 500 grams",
-      "description": "Fine quality Branded Product Keep in a cool and dry place",
-      "price": 20,
-      "discountPercentage": 4.81,
-      "rating": 4.44,
-      "stock": 133,
-      "brand": "Saaf & Khaas",
-      "category": "groceries",
-      "thumbnail": "https://cdn.dummyjson.com/product-images/21/thumbnail.png",
-      "images": [
-        "https://cdn.dummyjson.com/product-images/21/1.png",
-        "https://cdn.dummyjson.com/product-images/21/2.jpg",
-        "https://cdn.dummyjson.com/product-images/21/3.jpg"
-      ]
-    },
-    {
       "id": "22",
       "title": "Elbow Macaroni - 400 gm",
       "description": "Product details of Bake Parlor Big Elbow Macaroni - 400 gm",
@@ -185,14 +168,51 @@
         "https://cdn.dummyjson.com/product-images/30/3.jpg",
         "https://cdn.dummyjson.com/product-images/30/thumbnail.jpg"
       ]
+    },
+    {
+      "title": "Title",
+      "price": 300,
+      "description": "OPPO F19 is officially announced on April 2021.",
+      "id": "yWaQ3Lv"
+    },
+    {
+      "title": "adfafda",
+      "price": 300,
+      "description": "OPPO F19 is officially announced on April 2021.",
+      "id": "INA3FrF"
+    },
+    {
+      "title": "ereererer",
+      "price": 300,
+      "description": "OPPO F19 is officially announced on April 2021.",
+      "id": "LTcL7vB"
+    },
+    {
+      "title": "ereererer",
+      "price": 300,
+      "description": "OPPO F19 is officially announced on April 2021.",
+      "id": "DjeA2HT"
+    },
+    {
+      "title": "Title2",
+      "price": 9999,
+      "description": "OPPO F19 is officially announced on April 2021.",
+      "id": "bGiiFQt"
+    },
+    {
+      "title": "sdafa",
+      "price": 300,
+      "description": "OPPO F19 is officially announced on April 2021.",
+      "id": "M9yxS-O"
+    },
+    {
+      "title": "sdafa",
+      "price": 300,
+      "description": "OPPO F19 is officially announced on April 2021.",
+      "id": "LXgmeBG"
     }
   ],
   "users": [
-    {
-      "email": "client@gmail.com",
-      "password": "$2a$10$Stbrp.fVbSyX0Bz1OWj/D.w/yLzTN0onK2yLBUo83b7Zm/tsKZgfa",
-      "id": 1
-    },
     {
       "email": "bacle@gmail.com",
       "password": "$2a$10$YrTIyJuc33G4.ris/qVLtO1fQ3BntvEVktVkqTGg0lSO/GKl6HnMe",
@@ -207,6 +227,11 @@
       "email": "bacle3@gmail.com",
       "password": "$2a$10$UDuzxjwrIs2yVDUXrmlfduI6cAKqi/oIH1uplLYgivB01SbMCKZ0K",
       "id": 4
+    },
+    {
+      "email": "client@gmail.com",
+      "password": "$2a$10$KJxR8pqIwAa1YbVLaymcRedqSG5z5keZ.gvH6f0nQT5p98Rf0BdC.",
+      "id": 5
     }
   ]
 }

@@ -45,7 +45,7 @@ export default function AuthFrom({ isRegiter }) {
             htmlFor="large-input"
             className="block mb-2 text-sm font-medium text-gray-900"
           >
-            email
+            Email
           </label>
           <input
             type="text"
@@ -62,7 +62,7 @@ export default function AuthFrom({ isRegiter }) {
             htmlFor="password"
             className="block mb-2 text-sm font-medium text-gray-900"
           >
-            password
+            Password
           </label>
           <input
             type="password"
